@@ -1,0 +1,46 @@
+
+<style>
+
+</style>
+<template>
+
+  <p>{{trigger_name}} Results!</p>
+
+  <hr/>
+    <p v-if="points < 3">Congrats on finishing this content!</p>
+    <p v-else-if="points = 3">Congrats on finishing this content!</p>
+
+    <div v-else-if="points = 4">
+      <p v-if="numOfShadedAs > 1">Congrats on finishing this content!</p>
+      <p v-else>Congrats on finishing this content!</p>
+    </div>
+    <p v-else-if="points = 5">Congrats on finishing this content!</p>
+    <div v-else-if="points = 6">
+      <p v-if="numOfShadedAs > 2">Congrats on finishing this content!</p>
+      <p v-else>Congrats on finishing this content!</p>
+    </div>
+    <p v-else-if="points = 7">Congrats on finishing this content!</p>
+    <p v-else-if="points = 8">Congrats on finishing this content!</p>
+    <p v-else-if="points > 9">Congrats on finishing this content!</p>
+
+</template>
+
+<script>
+
+  /**
+   * @param object ctx a bag of goodies that holds parameters
+   * like contact data, campaign points, etc.
+   */
+  ConveYourApp.create(function( ctx ){
+
+    return {
+      data : function(){
+        return {
+          trigger_name : ctx.trigger.name,
+          finished : ctx.completion_state.finished
+        }
+      }
+    }
+
+  });
+</script>

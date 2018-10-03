@@ -1,40 +1,26 @@
 <style>
-
 </style>
 <template>
-
   <p> {{trigger_name}} Results!</p>
-
+  <p>Points</p>
+  <p>{{ totalUserscore }}</p>
+  <p>Number of Shaded As</p>
+  <p>{{ numOfShadedAs }}</p>
   <hr/>
     <p v-if="totalUserscore < 3">You probably experience lots of stress, bouncing back and forth between Gamer attempts to keep your job and frustration with your staff.</p>
-    <p v-else-if="totalUserscore = 3">You likely do try to achieve results, but with a high degree of frustration common to the User style. You may try to be liked, but it generally doesn't work.</p>
-    <div v-else-if="totalUserscore = 4">
-      <p v-if="numOfShadedAs > 1">You likely do try to achive results, but with a high degree of frustration common to the User style. You may try to be liked, but it generally doesen't work</p>
-      <p v-else>You probably are a results-oriented manager with an opportunity to sustain your results as you connect with and invest in your people.</p>
-    </div>
-    <p v-else-if="totalUserscore = 5">You have Winning Well management instincts that likely get buried in day-to-day stress and personal frustrations.</p>
-    <div v-else-if="totalUserscore = 6">
-      <p v-if="numOfShadedAs > 2">You likely have Winning Well instincts and a focus on results</p> <!--On the PDF these will appear in reverse order. Made sence for logic. -->
-      <p v-else>You may identify with the Pleaser style, putting lots of effort into being liked and reacting to one crisis after anouther with some focus on results.</p>
-    </div>
-    <p v-else-if="totalUserscore = 7">You likely have Winning Well instincts and focus on relation-ships. </p>
-    <p v-else-if="totalUserscore = 8">You likely have strong Winning Well practices and may flex easily between results and relationships.</p>
-    <p v-else-if="totalUserscore > 9">You likely have strong Winning Well practices and emphasize relationships in your day-today work. </p>
-
+    <p v-else-if="totalUserscore == 3">You likely do try to achieve results, but with a high degree of frustration common to the User style. You may try to be liked, but it generally doesn't work.</p>
+    <p v-else-if="totalUserscore == 4 && numOfShadedAs > 1">You likely do try to achive results, but with a high degree of frustration common to the User style. You may try to be liked, but it generally doesen't work</p>
+    <p v-else-if="totalUserscore == 4 && numOfShadedAs <= 1">You probably are a results-oriented manager with an opportunity to sustain your results as you connect with and invest in your people.</p>
+    <p v-else-if="totalUserscore == 5">You have Winning Well management instincts that likely get buried in day-to-day stress and personal frustrations.</p>
+    <p v-else-if="totalUserscore == 6 && numOfShadedAs > 1">You likely do try to achive results, but with a high degree of frustration common to the User style. You may try to be liked, but it generally doesen't work</p>
+    <p v-else-if="totalUserscore == 6 && numOfShadedAs <= 1">You probably are a results-oriented manager with an opportunity to sustain your results as you connect with and invest in your people.</p>
+    <p v-else-if="totalUserscore == 7">You likely have Winning Well instincts and focus on relation-ships. </p>
+    <p v-else-if="totalUserscore == 8">You likely have strong Winning Well practices and may flex easily between results and relationships.</p>
+    <p v-else-if="totalUserscore > 8">You likely have strong Winning Well practices and emphasize relationships in your day-today work. </p>
     <div v-else>
       Hmm. This is puzzling.
     </div>
-
-
-
-<p>Points</p>
-<p>{{ totalUserscore }}</p>
 </template>
-
-
-
-
-
 <script>
 
   /**
@@ -53,7 +39,7 @@
       },
       computed: {
         // a computed getter
-        totalUserscore() {
+        totalUserscore: function () {
           // Grab all Triggers.
             var allTriggers = ctx.campaign_triggers;
           // Collect the Assement triggers.
@@ -94,7 +80,54 @@
             console.log('Total Points');
             console.log(totalpoints);
             return totalpoints;
+        },
+        // a computed getter
+        numOfShadedAs: function () {
+          // Grab all Triggers.
+            var allTriggers = ctx.campaign_triggers;
+          // Collect the Assement triggers.
+            var assesmentTriggers = [];
+            allTriggers.forEach(function(entry) {
+                      if (entry.type == 'qa_assessment') {
+                        assesmentTriggers.push(entry);
+                        console.log('Assment Q Added');
+                      }
+                  });
+
+            //Count the Score on all
+            /// A's = 1 B's = 0
+
+            var userScore = 0;
+            var numOfShadedAs = 0
+            var totalpoints = 0;
+
+              assesmentTriggers.forEach(function(entry) {
+
+                      //// Count all total
+                      userScore = userScore+entry.points;
+
+                        //// Count shaded in a separate bucket
+                      if (entry.name.includes("Shaded")) {
+                        numOfShadedAs = numOfShadedAs+entry.points;
+                      }
+                  });
+
+        ///// Add the buckets and set your Points
+                  console.log('User score');
+                  console.log(userScore);
+
+                  console.log('Shadded As');
+                  console.log(numOfShadedAs);
+            totalpoints = userScore + numOfShadedAs;
+
+            console.log('Total Points');
+            console.log(totalpoints);
+            return numOfShadedAs;
         }
+
+
+
+
 
       }
 }

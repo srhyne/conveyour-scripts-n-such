@@ -43,58 +43,60 @@
    */
   ConveYourApp.create(function( ctx ){
 
-    // Grab all Triggers.
-      var allTriggers = ctx.campaign_triggers;
-    // Collect the Assement triggers.
-      var assesmentTriggers = [];
-      allTriggers.forEach(function(entry) {
-                if (entry.type == 'qa_assessment') {
-                  assesmentTriggers.push(entry);
-                  console.log('Assment Q Added');
-                }
-            });
-
-      //Count the Score on all
-      /// A's = 1 B's = 0
-
-      var userScore = 0;
-      var numOfShadedAs = 0
-      var totalpoints = 0;
-
-        assesmentTriggers.forEach(function(entry) {
-
-                //// Count all total
-                userScore = userScore+entry.points;
-
-                  //// Count shaded in a separate bucket
-                if (entry.name.includes("Shaded")) {
-                  numOfShadedAs = numOfShadedAs+entry.points;
-                }
-            });
-
-  ///// Add the buckets and set your Points
-            console.log('User score');
-            console.log(userScore);
-
-            console.log('Shadded As');
-            console.log(numOfShadedAs);
-      totalpoints = userScore + numOfShadedAs;
-
-      console.log('Total Points');
-      console.log(totalpoints);
-
-
     return {
       data : function(){
         return {
           trigger_name : ctx.trigger.name,
           finished : ctx.completion_state.finished,
-          totalUserscore : totalpoints,
-          numOfShadedAs: numOfShadedAs
 
         }
-      }
-    }
+      },
+      computed: {
+        // a computed getter
+        totalUserscore() {
+          // Grab all Triggers.
+            var allTriggers = ctx.campaign_triggers;
+          // Collect the Assement triggers.
+            var assesmentTriggers = [];
+            allTriggers.forEach(function(entry) {
+                      if (entry.type == 'qa_assessment') {
+                        assesmentTriggers.push(entry);
+                        console.log('Assment Q Added');
+                      }
+                  });
 
+            //Count the Score on all
+            /// A's = 1 B's = 0
+
+            var userScore = 0;
+            var numOfShadedAs = 0
+            var totalpoints = 0;
+
+              assesmentTriggers.forEach(function(entry) {
+
+                      //// Count all total
+                      userScore = userScore+entry.points;
+
+                        //// Count shaded in a separate bucket
+                      if (entry.name.includes("Shaded")) {
+                        numOfShadedAs = numOfShadedAs+entry.points;
+                      }
+                  });
+
+        ///// Add the buckets and set your Points
+                  console.log('User score');
+                  console.log(userScore);
+
+                  console.log('Shadded As');
+                  console.log(numOfShadedAs);
+            totalpoints = userScore + numOfShadedAs;
+
+            console.log('Total Points');
+            console.log(totalpoints);
+            return totalpoints;
+        }
+
+      }
+}
   });
 </script>

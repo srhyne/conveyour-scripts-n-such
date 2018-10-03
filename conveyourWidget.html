@@ -22,7 +22,19 @@
     <p v-else-if="points = 8">You likely have strong Winning Well practices and may flex easily between results and relationships.</p>
     <p v-else-if="points > 9">You likely have strong Winning Well practices and emphasize relationships in your day-today work. </p>
 
+    <div v-else>
+      Hmm. This is puzzling.
+    </div>
+
+
+
+<p>Points</p>
+<p>{{ points }}</p>
 </template>
+
+
+
+
 
 <script>
 
@@ -31,12 +43,93 @@
    * like contact data, campaign points, etc.
    */
   ConveYourApp.create(function( ctx ){
+    console.log(ctx);
+
+
+
+
+    // console.log('This is CTX');
+    // console.log(ctx);
+    // console.log('This is data'); Data var not ava.
+    // console.log(data);
+
+    // console.log('This is totalpoints');
+    // console.log(totalpoints);
+
+    // Grab all Triggers.
+      var allTriggers = ctx.campaign_triggers;
+    // Collect the Assement triggers.
+      var assesmentTriggers = [];
+      allTriggers.forEach(function(entry) {
+                // console.log('Trigger');
+                // console.log(entry.type);
+                if (entry.type == 'qa_assessment') {
+                  assesmentTriggers.push(entry);
+                  console.log('Assment Q Added');
+                }
+
+            });
+
+      //Count the Score on all
+      /// A's = 1 B's = 0
+      //// Count all total
+      //// Count shaded in a separate bucket
+      ///// Add the buckets and set your Points
+
+      var userScore = 0;
+      var numOfShadedAs = 0
+      var totalpoints = 0;
+
+      assesmentTriggers.forEach(function(entry) {
+                console.log('Adding Points');
+                console.log(entry.points);
+
+                console.log('userScore pre');
+                console.log(userScore);
+
+                userScore = userScore+entry.points;
+                console.log('userScore post');
+                console.log(userScore);
+
+                if (entry.name.includes("Shaded")) {
+                  console.log('shaded added');
+                  numOfShadedAs = numOfShadedAs+entry.points;
+                }
+
+            });
+
+
+            console.log('User score');
+            console.log(userScore);
+
+            console.log('Shadded As');
+            console.log(numOfShadedAs);
+
+      totalpoints = userScore + numOfShadedAs;
+
+      console.log('Total Points');
+      console.log(totalpoints);
+
+
+      // console.log('assesmentTriggers');
+      // console.log(assesmentTriggers);
+    //Remove first and last Triggers
+      // allTriggers = allTriggers.shift();
+     // allTriggers = allTriggers.pop();
+// obj.name will contain trigger name
+// .points I belive is pounts.
+// obj.type : "qa_assessment"
+
 
     return {
       data : function(){
         return {
           trigger_name : ctx.trigger.name,
-          finished : ctx.completion_state.finished
+          finished : ctx.completion_state.finished,
+          bag : ctx.campaign_triggers,
+          points : totalpoints,
+          numOfShadedAs: numOfShadedAs
+
         }
       }
     }

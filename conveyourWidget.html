@@ -38,6 +38,14 @@
         }
       },
       computed: {
+        assessmentTriggers: function(){
+          return [ 1, 2, 3 ];
+        },
+        
+        assessmentTriggerCount : function(){
+          return this.assessmentTriggers.length
+        },
+        
         // a computed getter
         totalUserscore: function () {
           // Grab all Triggers.
